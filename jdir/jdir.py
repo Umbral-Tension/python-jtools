@@ -11,22 +11,36 @@ def no_slash(pathstring):
 
 # Calculate size of a directory in bytes (doesn't SEEM to be a method that does this directly in os or shutil)
 # should add exception handling for if aPath does not exist.
-def get_dir_size(aPath):
-    if not os.path.isdir(aPath):
+def get_dir_size(pathstring):
+    if not os.path.isdir(pathstring):
         return -1
     size = 0
-    for path, directory, filenames, in os.walk(aPath):
+    for currPath, directory, filenames, in os.walk(pathstring):
         for f in filenames:
-            size += os.path.getsize(os.path.join(path, f))
+            size += os.path.getsize(os.path.join(currPath, f))
     return size
+
+def get_file_size(pathstring):
+    return path.getsize(norm(pathstring))
+
+
+def delete_empty_directories(pathstring):
+    """ deletes all empty subdirectories of pathstring """
+    pathstring = norm(pathstring)
+    if not path.exists(pathstring):
+        return
+    for currpath, dirs, files, in os.walk(pathstring):
+        if currpath != pathstring:
+            os.rmdir(currpath)
+
 
 
 # Should replace with something built in as I'm sure there's something available.
 # Counts the number of files in a directory
-def file_count(path, count=0):
-    for dir_entry in os.scandir(path):
+def get_file_count(pathstring, count=0):
+    for dir_entry in os.scandir(pathstring):
         if dir_entry.is_dir():
-            count = file_count(dir_entry.path, count)
+            count = get_file_count(dir_entry.path, count)
         else:
             count += 1
     return count
@@ -34,8 +48,8 @@ def file_count(path, count=0):
 
 # Checks if a file name already exists in a directory and if so,
 # looks for an available file name using the pattern name_#
-def dup_rename(file_name, path):
-    ls = os.listdir(path)
+def dup_rename(file_name, pathstring):
+    ls = os.listdir(pathstring)
     if file_name not in ls:
         return file_name
     else:
@@ -43,7 +57,7 @@ def dup_rename(file_name, path):
         tup = file_name.rsplit('.', 1)
         name = tup[0]
         ext = tup[1]
-        while(True):
+        while True:
             rename = name + '_' + str(suffix) + '.' + ext
             if rename not in ls:
                 return rename
@@ -57,6 +71,7 @@ def norm(pathstring):
 
 
 def get_parent_dir(pathstring):
+
     return path.split(norm(pathstring))[0]
 
 

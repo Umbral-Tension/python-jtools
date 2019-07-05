@@ -2,17 +2,19 @@ import os, sys
 from os import path
 
 
-# Returns a path string with all slashes removed. Useful for comparing path strings whose slash direction
-# is unknown. I.E two path strings may refer to the same location but have different slash directions, and
-# a comparison would yield False, which is probably undesirable.
 def no_slash(pathstring):
+    """Return a path string with all slashes removed.
+
+    Useful for comparing path strings whose slash direction is unknown. I.E two path strings may refer to the same
+    location but have different slash directions, and a comparison would yield False, which is probably undesirable.
+    """
     return pathstring.replace('\\', '').replace('/', '')
 
 
-# Calculate size of a directory in bytes (doesn't SEEM to be a method that does this directly in os or shutil)
-# should add exception handling for if aPath does not exist.
 def get_dir_size(pathstring):
-    if not os.path.isdir(pathstring):
+    """Calculate a directory's size in bytes."""
+    pathstring = norm(pathstring)
+    if not (path.exists(pathstring) and path.isdir(pathstring)):
         return -1
     size = 0
     for currPath, directory, filenames, in os.walk(pathstring):
@@ -25,7 +27,7 @@ def get_file_size(pathstring):
 
 
 def delete_empty_directories(pathstring):
-    """ deletes all empty subdirectories of pathstring """
+    """ Delete all empty subdirectories of pathstring."""
     pathstring = norm(pathstring)
     if not path.exists(pathstring):
         return
@@ -34,10 +36,8 @@ def delete_empty_directories(pathstring):
             os.rmdir(currpath)
 
 
-
-# Should replace with something built in as I'm sure there's something available.
-# Counts the number of files in a directory
 def get_file_count(pathstring, count=0):
+    """Recursively count the number of files in a directory."""
     for dir_entry in os.scandir(pathstring):
         if dir_entry.is_dir():
             count = get_file_count(dir_entry.path, count)
@@ -46,9 +46,11 @@ def get_file_count(pathstring, count=0):
     return count
 
 
-# Checks if a file name already exists in a directory and if so,
-# looks for an available file name using the pattern name_#
 def dup_rename(file_name, pathstring):
+    """Return an alternative file name if 'file_name' already exists.
+
+    looks for an available file name using the pattern name_#
+    """
     ls = os.listdir(pathstring)
     if file_name not in ls:
         return file_name
@@ -65,19 +67,19 @@ def dup_rename(file_name, pathstring):
                 suffix += 1
 
 
-# normalize path strings. change / to \, convert to lowercase, collapse redunant ..'s
 def norm(pathstring):
+    """Normalize the path string's formatting.
+
+    change / to \\, convert to lowercase, collapse redundant (..)'s"""
     return path.normpath(path.normcase(pathstring))
 
 
 def get_parent_dir(pathstring):
-
     return path.split(norm(pathstring))[0]
 
 
-# Checks whether the given directory is one of the large top
-# level directors (root like C:\ are detected via the path's length)
 def is_danger_dir(pathstring):
+    """Check whether the given directory is one of the large top lvl directories."""
     pathstring = str(norm(pathstring))
     # reject root dirs like 'C:\'
     if len(pathstring) < 4:
@@ -97,7 +99,8 @@ def is_danger_dir(pathstring):
     return False
 
 
-def formatbytes(bytesize, unit = "KiB"):
+def formatbytes(bytesize, unit="KB"):
+    """Convert storage size from bytes to the desired unit and return a formatted string"""
     unit = unit.upper()
     lookup = {"B": 1, "KB": pow(2, 10), "MB": pow(2, 20), "GB": pow(2, 30), "TB": pow(2, 40)}
     return '{0:.2f}'.format(bytesize/lookup[unit]) + ' ' + unit

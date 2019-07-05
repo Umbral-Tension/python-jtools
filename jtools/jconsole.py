@@ -22,8 +22,8 @@ bold = '\033[1m'
 endc = '\033[0m'  # reset console formatting
 
 
-# prompts for a yes or no response.
 def yes_no(s=''):
+    """Prompt user for a yes or no response."""
     while True:
         response = input(s + ' (Y/N)')
         if response.lower() == 'y':
@@ -35,51 +35,41 @@ def yes_no(s=''):
 
 
 def exit_app(exit_message=''):
+    """Display exit message, then wait for user to press enter before running exit()"""
     print(red + exit_message + endc)
     input('\nPress Enter to exit the program')
     exit()
 
-# Debugging tool that prints the contents of whatever variables are passed to it w/ some
-# helpful formatting. Option to print iterables horizontally 'inline'.
-# If no parameters are passed, test() will print 'here'.
-#todo currently there's an issue where ptest is passing in a tuple whose only element
-# is a tuple that contains the parameters originally passed to ptest(). This results in
-# test() printing them all under 'var 0:' vertically.
-# Maybe introduce a recusion level tracker / exception for ptest() / make inline a boolean function parameter.
-def test(*variables):
+
+def test(*variables, inline=False):
+    """Print the list of parameters with some helpful formatting.
+
+    Option to print iterables horizontally, 'inline'. If no parameters are given, test() will print 'here'."""
     print(type(variables), type(variables[0]), variables[0])
     if len(variables) == 0:
         print('here')
         return
-    inline = True if str(variables[0]) == 'jinline' else False
-    enumeration_string = ',' if inline else '\n\t'
-    start = 1 if inline else 0
 
-    for i in range(start, len(variables)):
+    for i in range(0, len(variables)):
         curr = variables[i]
-        printstring = f'var {i}: '
+        printstring = f'var {i}:\t'
         if not isinstance(curr, Iterable) or isinstance(curr, str):
-            printstring += f'\t{variables[i]}'
+            printstring += f'{variables[i]}'
         else:
-            if inline:
-                printstring += '\t'
+            enumeration_string = ',' if inline else '\n\t\t'
             index = 0
             for x in curr:
-                #printstring = printstring + '\t' if index == 0 else printstring
                 printstring += ('' if index == 0 else enumeration_string) + str(x)
                 index += 1
         print(printstring)
     return
 
 
-def ptest(*variables):
-    test(variables)
+def ptest(*variables, inline=False):
+    """ Pass all parameters to test() and then pause execution until user presses enter."""
+    test(*variables, inline=inline)
     print(red)
     input('Process paused. Press any key to un-pause')
     print(endc)
 
 
-test('jinline', 'sdfsdf', (2,4,5,0))
-print('-------------------------')
-ptest('jinline', 'sdfsdf', (2,4,5,0))
-test()

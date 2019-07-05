@@ -1,25 +1,19 @@
 from collections.abc import Iterable
 
 # console escape sequences for changing display settings.
-black = '\033[0;30m'
-dark_gray = '\033[1;30m'
-white = '\033[1;37m'
+white = '\033[0;30m'
+gray = '\033[0;37m'
 blue = '\033[0;34m'
 green = '\033[0;32m'
 cyan = '\033[0;36m'
 red = '\033[0;31m'
 purple = '\033[0;35m'
-brown = '\033[0;33m'
-yellow = '\033[1;33m'
-gray = '\033[0;37m'
-light_blue = '\033[1;34m'
-light_green = '\033[1;32m'
-light_cyan = '\033[1;36m'
-light_red = '\033[1;31m'
-light_purple = '\033[1;35m'
+yellow = '\033[0;33m'
 underline = '\033[4m'
 bold = '\033[1m'
 endc = '\033[0m'  # reset console formatting
+colors = (white, gray, blue, green, cyan, red,
+          purple, yellow, underline, bold, endc)
 
 
 def yes_no(s=''):
@@ -45,23 +39,23 @@ def test(*variables, inline=False):
     """Print the list of parameters with some helpful formatting.
 
     Option to print iterables horizontally, 'inline'. If no parameters are given, test() will print 'here'."""
-    print(type(variables), type(variables[0]), variables[0])
     if len(variables) == 0:
-        print('here')
+        print(blue + 'here' + endc)
         return
 
     for i in range(0, len(variables)):
         curr = variables[i]
-        printstring = f'var {i}:\t'
+        printstring = bold + purple + f'var {i}:\t' + endc
         if not isinstance(curr, Iterable) or isinstance(curr, str):
-            printstring += f'{variables[i]}'
+            printstring += yellow + f'{variables[i]}' + endc
         else:
-            enumeration_string = ',' if inline else '\n\t\t'
+            enumeration_string = bold + blue + ', ' if inline else '\n\t\t'
             index = 0
             for x in curr:
-                printstring += ('' if index == 0 else enumeration_string) + str(x)
+                printstring += ('' if index == 0 else enumeration_string) + yellow + str(x) + endc
                 index += 1
         print(printstring)
+    print(endc)
     return
 
 
@@ -71,5 +65,3 @@ def ptest(*variables, inline=False):
     print(red)
     input('Process paused. Press any key to un-pause')
     print(endc)
-
-

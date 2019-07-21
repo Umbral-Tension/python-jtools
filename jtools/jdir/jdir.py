@@ -2,6 +2,10 @@ import os, sys
 from os import path
 
 
+class JDirException(Exception):
+    pass
+
+
 def no_slash(pathstring):
     """Return a path string with all slashes removed.
 
@@ -28,6 +32,8 @@ def get_file_size(pathstring):
 
 def get_file_ext(pathstring):
     dotpos = path.basename(pathstring).rfind('.')
+    if dotpos < 0 or path.isdir(pathstring):
+        raise JDirException
     ext = path.basename(pathstring)[dotpos + 1:]
     return ext
 

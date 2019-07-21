@@ -22,9 +22,14 @@ def get_dir_size(pathstring):
             size += os.path.getsize(os.path.join(currPath, f))
     return size
 
+
 def get_file_size(pathstring):
     return path.getsize(norm(pathstring))
 
+def get_file_ext(pathstring):
+    dotpos = path.basename(pathstring).rfind('.')
+    ext = path.basename(pathstring)[dotpos + 1:]
+    return ext
 
 def delete_empty_directories(pathstring):
     """ Delete all empty subdirectories of pathstring."""

@@ -81,8 +81,10 @@ def dup_rename(file_name, pathstring):
 def norm(pathstring):
     """Normalize the path string's formatting.
 
-    change / to \\, convert to lowercase, collapse redundant (..)'s"""
-    return path.normpath(path.normcase(pathstring))
+    change / to \\, remove invalid characters, collapse redundant (..)'s"""
+    for char in [':', '*', '?', '<', '>', '|']:
+        pathstring = pathstring.replace(char, ' ')
+    return path.normpath(pathstring)
 
 
 def get_parent_dir(pathstring):

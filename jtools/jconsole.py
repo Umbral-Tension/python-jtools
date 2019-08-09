@@ -84,6 +84,3 @@ def ptest(*variables, inline=False):
     test(*variables, inline=inline)
     input(red('Process paused. Press any key to un-pause'))
 
-    
-
-exit_app(('sdfdsfsdf'))

@@ -19,7 +19,7 @@ class JPrime():
         return [item for item in selection_iterator]
 
     def clear_primes(self):
-        primes = [2,3]
+        self.primes = [2, 3]
         self._multiples = {}
 
     def _trivial_nonprime(self, num):
@@ -47,7 +47,7 @@ class JPrime():
         #   current V is obtained like: m = K/V. From there, this sieve can pick up where the last sieve left off by
         #   incrementing m and crossing off (m*K) until that product exceeds the biggest number in num_range.
         #
-        #   Any multiple of an even will be even. Thus: base += 2 to avoid checking them.
+        #   Any multiple of an even will be even (not prime). Thus: base += 2 to avoid checking them.
         greatest_num = max(num_range)
         root = math.ceil(math.sqrt(greatest_num))
         for base in range(3, root+1, 2):

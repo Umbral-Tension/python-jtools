@@ -11,28 +11,28 @@ endc = '\033[0m'
 def white(text):
     return Fore.WHITE + str(text) + endc
 
-def blue(text):
+def blue(text=''):
     return Fore.BLUE + str(text) + endc
 
-def green(text):
+def green(text=''):
     return Fore.GREEN + str(text) + endc
 
-def cyan(text):
+def cyan(text=''):
     return Fore.CYAN + str(text) + endc
 
-def red(text):
+def red(text=''):
     return Fore.RED + str(text) + endc
 
-def purple(text):
+def purple(text=''):
     return Fore.MAGENTA + str(text) + endc
 
-def yellow(text):
+def yellow(text=''):
     return Fore.YELLOW + str(text) + endc
 
-def underline(text):
+def underline(text=''):
     return '\033[4m' + str(text) + endc
 
-def bold(text):
+def bold(text=''):
     return '\033[1m' + str(text) + endc
 
 

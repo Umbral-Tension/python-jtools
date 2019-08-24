@@ -55,32 +55,42 @@ def exit_app(exit_message=''):
     exit()
     
 
-def test(*variables, inline=False):
+def test(*variables):
     """Print the list of parameters with some helpful formatting.
 
-    Option to print iterables horizontally, 'inline'. If no parameters are given, test() will print 'here'."""
+    If no parameters are given, test() will print 'here'."""
     colorama.reinit()
-    if len(variables) == 0:
-        print(blue('here'))
-        
-        return
-
+    printstring = blue('here') if len(variables) == 0 else ''
     for i in range(0, len(variables)):
-        curr = variables[i]
-        printstring = bold(purple(f'var {i}:\t'))
-        if not isinstance(curr, Iterable) or isinstance(curr, str):
-            printstring += yellow(f'{variables[i]}')
+        curr_value = variables[i]
+        if not isinstance(curr_value, Iterable) or isinstance(curr_value, str):
+            printstring += bold(purple(f'var {i}:\n')) + yellow(f'    {curr_value}\n')
         else:
-            enumeration_string = bold(blue(', ' if inline else '\n\t\t'))
-            index = 0
-            for x in curr:
-                printstring += ('' if index == 0 else enumeration_string) + yellow(str(x))
-                index += 1
-        print(printstring)
-    
+            printstring += _recursively_add_iterable(variables[i], i)
+    print(printstring)
+
+
+def _recursively_add_iterable(iterable, label_index='', indent_lvl=0):
+    """Recursively add iterables to the printstring.
+
+    This function is only called from within test()"""
+    value_indent = '    ' * (indent_lvl + 1)
+    newline = '\n' + value_indent
+    printstring = '' if indent_lvl != 0 else bold(purple(f'var {label_index}:'))
+
+    for i in range(len(iterable)):
+        curr_value = iterable[i]
+        if isinstance(curr_value, Iterable) and not isinstance(curr_value, str):
+            printstring += _recursively_add_iterable(curr_value, indent_lvl=indent_lvl + 1)
+        else:
+            printstring += newline + yellow(str(curr_value))
+    return printstring if indent_lvl != 0 else printstring + '\n'
+
+
 
 def ptest(*variables, inline=False):
     """ Pass all parameters to test() and then pause execution until user presses enter."""
-    test(*variables, inline=inline)
+    test(*variables)
     input(red('Process paused. Press any key to un-pause'))
+
 

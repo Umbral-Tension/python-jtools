@@ -21,14 +21,33 @@ def get_dir_size(pathstring):
     if not (path.exists(pathstring) and path.isdir(pathstring)):
         return -1
     size = 0
-    for currPath, directory, filenames, in os.walk(pathstring):
+    for dirpath, dirnames, filenames, in os.walk(pathstring):
         for f in filenames:
-            size += os.path.getsize(os.path.join(currPath, f))
+            size += os.path.getsize(os.path.join(dirpath, f))
     return size
+
+
+def get_all_filesystem_entries(pathstring, do_files=True, do_dirs=True):
+    ls = []
+    for dirpath, dirnames, filenames in os.walk(pathstring):
+        if do_files:
+            ls += [path.join(dirpath, name) for name in filenames]
+        if do_dirs:    
+            ls += [path.join(dirpath, name) for name in dirnames]
+    return ls
+
+
+def get_all_subdirs(pathstring):
+    return get_all_filesystem_entries(pathstring, do_files=False)
+
+
+def get_all_files(pathstring):
+    return get_all_filesystem_entries(pathstring, do_dirs=False)
 
 
 def get_file_size(pathstring):
     return path.getsize(norm(pathstring))
+
 
 def get_file_ext(pathstring):
     dotpos = path.basename(pathstring).rfind('.')
@@ -37,14 +56,15 @@ def get_file_ext(pathstring):
     ext = path.basename(pathstring)[dotpos + 1:]
     return ext
 
+
 def delete_empty_directories(pathstring):
     """ Delete all empty subdirectories of pathstring."""
     pathstring = norm(pathstring)
     if not path.exists(pathstring):
         return
-    for currpath, dirs, files, in os.walk(pathstring):
-        if currpath != pathstring:
-            os.rmdir(currpath)
+    for dirpath, dirnames, filenames, in os.walk(pathstring):
+        if dirpath != pathstring:
+            os.rmdir(dirpath)
 
 
 def get_file_count(pathstring, count=0):

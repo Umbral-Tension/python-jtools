@@ -1,5 +1,6 @@
 import os, sys
 from os import path
+from jtools.jconsole import yes_no
 
 
 class JDirException(Exception):
@@ -120,9 +121,10 @@ def is_danger_dir(pathstring):
     # reject all immeidate subdirectories of c:/
     if get_parent_dir(pathstring) == norm('c:/'):
         return True
-    # reject network locations
+    # ask user about network location
     if pathstring.startswith(('//', '\\\\')):
-        return True
+        return not yes_no('This is a network location. Is:{\n' + pathstring + '\n} safe to operate on?')
+        
     # reject large user directories
     userdirectories = ('documents', 'downloads', 'desktop', 'google drive', 'downloads', 'videos', 'music', 'pictures')
     parts = path.split(pathstring)

@@ -2,7 +2,6 @@ import os, sys
 from os import path
 from jtools.jconsole import yes_no
 
-
 class JDirException(Exception):
     pass
 

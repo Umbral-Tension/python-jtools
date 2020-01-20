@@ -64,7 +64,12 @@ def delete_empty_directories(pathstring):
         return
     for dirpath, dirnames, filenames, in os.walk(pathstring):
         if dirpath != pathstring:
-            os.rmdir(dirpath)
+                try:
+                    os.rmdir(dirpath)
+                except OSError:
+                    pass
+            
+                
 
 
 def get_file_count(pathstring, count=0):

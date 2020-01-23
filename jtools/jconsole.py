@@ -1,11 +1,14 @@
 from collections.abc import Iterable
 import colorama
 from colorama import Fore
+import progress.bar # console progress bar module
+import sys
 
 #initliaze colorama so colors can be used in console text
 colorama.init()
 #reset formatting
 endc = '\033[0m'
+Bar = progress.bar.Bar # allows scripts to access the Bar class by importing jconsole
 
 #return a string that will print the passed parameter in a given color
 def white(text):
@@ -56,35 +59,31 @@ def exit_app(exit_message=''):
     
 
 def test(*variables):
-    """Print the list of parameters with some helpful formatting.
-
-    If no parameters are given, test() will print 'here'."""
     colorama.reinit()
-    printstring = blue('here') if len(variables) == 0 else ''
-    for i in range(0, len(variables)):
-        curr_value = variables[i]
-        if not isinstance(curr_value, Iterable) or isinstance(curr_value, str):
-            printstring += bold(purple(f'var {i}:\n')) + yellow(f'    {curr_value}\n')
-        else:
-            printstring += _recursively_add_iterable(variables[i], i)
-    print(printstring)
+    if len(variables) == 0:
+        print(bold(blue('here')))
+        return
+    else:
+        print(_recursively_add_vars(variables))
 
-
-def _recursively_add_iterable(iterable, label_index='', indent_lvl=0):
+def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
     """Recursively add iterables to the printstring.
 
     This function is only called from within test()"""
-    value_indent = '    ' * (indent_lvl + 1)
-    newline = '\n' + value_indent
-    printstring = '' if indent_lvl != 0 else bold(purple(f'var {label_index}:'))
-
+    indent = '    '
+    printstring = ''
     for i in range(len(iterable)):
+        if indent_lvl == 0:
+            printstring += bold(purple(f'var {i}:\n'))
         curr_value = iterable[i]
-        if isinstance(curr_value, Iterable) and not isinstance(curr_value, str):
-            printstring += _recursively_add_iterable(curr_value, indent_lvl=indent_lvl + 1)
+        if isinstance(curr_value, str) or not isinstance(curr_value, Iterable):
+            if indent_lvl < 2:
+                printstring += indent + yellow(str(curr_value)) + '\n'
+            else:
+                printstring += (indent * indent_lvl) + yellow(str(curr_value)) + '\n'
         else:
-            printstring += newline + yellow(str(curr_value))
-    return printstring if indent_lvl != 0 else printstring + '\n'
+            printstring += _recursively_add_vars(curr_value, label_index=i, indent_lvl=indent_lvl + 1)
+    return printstring
 
 
 

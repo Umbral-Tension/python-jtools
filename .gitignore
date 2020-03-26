@@ -1,7 +1,3 @@
-jtools/jmath/__pycache__/__init__.cpython-37.pyc
-jtools/jdir/jdir.py
-jtools/jmath/__pycache__/jcombinatoric.cpython-37.pyc
-jtools/jdir/__pycache__/jdir.cpython-37.pyc
-.idea/workspace.xml
-.idea/workspace.xml
-jtools/jdir/__pycache__/jdir.cpython-37.pyc
+.idea/
+_pycache_/
+venv/

@@ -2,7 +2,7 @@ from collections.abc import Iterable
 import colorama
 from colorama import Fore
 import progress.bar # console progress bar module
-import sys
+import os
 
 #initliaze colorama so colors can be used in console text
 colorama.init()
@@ -56,7 +56,9 @@ def exit_app(exit_message=''):
     print(red(exit_message))
     input('\nPress Enter to exit the program')
     exit()
-    
+
+def cls():
+    os.system('cls')
 
 def test(*variables):
     colorama.reinit()

@@ -95,3 +95,21 @@ def ptest(*variables, inline=False):
     input(red('Process paused. Press any key to un-pause'))
 
 
+# formatted dir() function 
+def dir_(obj):
+    import inspect
+    from inspect import isclass, isfunction, ismethod        
+    # meant to 'overide' inspect.getmembers()
+    def getmembers(obj, predicate):
+        member_tuples = inspect.getmembers(obj, predicate)
+        # extract and return just the names from the (name, value) tuples given by inspect module
+        names = [x[0] for x in member_tuples]
+        return [x for x in names if not x.startswith('_')]
+    
+    classes = getmembers(obj, isclass)
+    functions = getmembers(obj, isfunction)
+    methods = getmembers(obj, isclass)
+    return {'classes': classes, 'functions': functions, 'methods': methods}
+
+
+    

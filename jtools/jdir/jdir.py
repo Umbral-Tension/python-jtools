@@ -107,9 +107,11 @@ def norm(pathstring):
     """Normalize the path string's formatting.
 
     change / to \\, remove invalid characters, collapse redundant (..)'s"""
+    cleansed = pathstring
     for char in [':', '*', '?', '<', '>', '|']:
-        pathstring = pathstring.replace(char, ' ')
-    return path.normpath(pathstring)
+        cleansed = cleansed.replace(char, ' ')
+    cleansed = path.normpath(cleansed)
+    return cleansed
 
 
 def get_parent_dir(pathstring):

@@ -108,8 +108,9 @@ def norm(pathstring):
 
     change / to \\, remove invalid characters, collapse redundant (..)'s"""
     cleansed = pathstring
-    for char in [':', '*', '?', '<', '>', '|']:
+    for char in ['*', '?', '<', '>', '|']:
         cleansed = cleansed.replace(char, ' ')
+    cleansed = cleansed[:2] + cleansed[2:].replace(':', ' ',) # Have to allow the first colan through in C:/programs:andsuch/afile
     cleansed = path.normpath(cleansed)
     return cleansed
 

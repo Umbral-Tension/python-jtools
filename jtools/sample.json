@@ -1,0 +1,19 @@
+{
+    "ls": [
+        "a", "b", "c", [1, 2, 3, 4, 5]
+    ],
+    "dic": {
+        "dic2":{
+            "dic3":{
+                "dic3a": "fate",
+                "dic3b": "wyrd"
+            },
+            "dic2a": "red",
+            "dic2b": "blue"
+        },
+        "dic1a": "leather",
+        "dic1b": "swede",
+        "dic1c": ["nuptuals", "vowes", "ceremony"]
+    }
+
+}

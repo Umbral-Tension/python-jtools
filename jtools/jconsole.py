@@ -68,7 +68,7 @@ def test(*variables):
         print(_recursively_add_vars(variables))
 
 def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
-    """Recursive into iterables and add their values to the printstring that test() will ultimately display.
+    """Recurse into iterables and add their values to the printstring that test() will ultimately display.
 
     This function is only called from within test()"""
     printstring = ''
@@ -92,9 +92,13 @@ def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
         
         # This is the recursive function's base case. It stops recursing when it finds a string or non-iterable
         # because it makes sense to print these primitives 'as-is'
-        curr_value_is_primitive = isinstance(curr_value, str) or not isinstance(curr_value, Iterable)
+        curr_value_is_primitive = isinstance(curr_value, str) or isinstance(curr_value, bool) or not isinstance(curr_value, Iterable)
         
         indent_str = BASE_INDENT * indent_lvl 
+        if indent_lvl > 0 and i == 0:
+            itertype = type(iterable)
+            printstring += f'{indent_str}{bold(itertype)}\n'
+        
         if iterable_is_dictionary: # we always want to print dictionary keys, even if their value is another iterable
            printstring += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")} '
            if not(curr_value_is_primitive):
@@ -104,7 +108,7 @@ def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
                 printstring += f'{yellow(iterable[keys[i]])}\n'
             else:
                 printstring += indent_str + yellow(str(curr_value)) + '\n'
-            
+        
         # Continue recursion if curr_value is an iterable. 
         if not(curr_value_is_primitive):
             printstring += _recursively_add_vars(curr_value, label_index=i, indent_lvl=indent_lvl + 1)

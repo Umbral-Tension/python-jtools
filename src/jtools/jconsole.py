@@ -4,13 +4,13 @@ from colorama import Fore
 import progress.bar # console progress bar module
 import os
 
-#initliaze colorama so colors can be used in console text
+# initialize colorama so colors can be used in console text
 colorama.init()
-#reset formatting
+# reset formatting
 endc = '\033[0m'
 Bar = progress.bar.Bar # allows scripts to access the Bar class by importing jconsole
 
-#return a string that will print the passed parameter in a given color
+# return a string that will print the passed parameter in a given color
 def white(text):
     return Fore.WHITE + str(text) + endc
 
@@ -67,15 +67,16 @@ def test(*variables):
     else:
         print(_recursively_add_vars(variables))
 
-def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
+
+def _recursively_add_vars(iterable, indent_lvl=0):
     """Recurse into iterables and add their values to the printstring that test() will ultimately display.
 
     This function is only called from within test()"""
     printstring = ''
-    BASE_INDENT = '    '
+    base_indent = '    '
     iterable_is_dictionary = isinstance(iterable, dict)
     if iterable_is_dictionary:
-        keys = sorted(list(iterable.keys()))
+        keys = list(iterable.keys())
     # The first call of recursively...() is always done by test() which always passes in its *variables parameter.
     # *variables is an iterable so there is no 'isIterable' check necessary at this outer scope. 
     for i in range(len(iterable)): 
@@ -85,33 +86,43 @@ def _recursively_add_vars(iterable, label_index='', indent_lvl=0):
         if indent_lvl == 0:
             printstring += bold(purple(f'test_var {i}:\n'))
 
-        # curr_value is the single object 'under consideration' (for a given loop interation of a given function call)
-        # It will be checked to see if it is a simple value that's okay to print, or if it is an iterable that needs to be recursed into further. 
-        # note: dictionaries cannot be indexed by just i, so a list of the dictionary's keys is made which CAN be indexed by i. 
-        curr_value = iterable[keys[i]] if iterable_is_dictionary else iterable[i]
+        # curr_value is the single object 'under consideration' (for a given loop iteration of a given function call)
+        # It will be checked to see if it is a simple value that's okay to print, or if it is an iterable that needs to
+        # be recursed into further. # note: dictionaries cannot be indexed by just i, so a list of the dictionary's
+        # keys is made which CAN be indexed by i.
+        if iterable_is_dictionary:
+            curr_value = iterable[keys[i]]
+        else:
+            curr_value = iterable[i]
         
         # This is the recursive function's base case. It stops recursing when it finds a string or non-iterable
         # because it makes sense to print these primitives 'as-is'
-        curr_value_is_primitive = isinstance(curr_value, str) or isinstance(curr_value, bool) or not isinstance(curr_value, Iterable)
-        
-        indent_str = BASE_INDENT * indent_lvl 
+        # TODO Look into __get_item__ implementation to support recursion into non-standard iterables. Currently only
+        #  simple iterables are recursed into eg (list/dict/set/tuple).
+        import builtins
+        builtin_types = [getattr(builtins, d) for d in dir(builtins) if isinstance(getattr(builtins, d), type)]
+        curr_value_is_primitive = isinstance(curr_value, (str, set)) or not isinstance(curr_value, Iterable) \
+                                  or (isinstance(curr_value, Iterable) and type(curr_value) not in builtin_types)
+
+        indent_str = base_indent * indent_lvl
         if indent_lvl > 0 and i == 0:
             itertype = type(iterable)
             printstring += f'{indent_str}{bold(itertype)}\n'
         
-        if iterable_is_dictionary: # we always want to print dictionary keys, even if their value is another iterable
-           printstring += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")} '
-           if not(curr_value_is_primitive):
-               printstring += '\n' # don't want to start printing a lower nested iterable on the same line as the upper dictionary key
+        if iterable_is_dictionary:  # we always want to print dictionary keys, even if their value is another iterable
+            printstring += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")} '
+            if not curr_value_is_primitive:
+                # don't want to start printing a lower nested iterable on the same line as the upper dictionary key
+                printstring += '\n'
         if curr_value_is_primitive:
-            if iterable_is_dictionary: #special formatting required for dicitonaries
+            if iterable_is_dictionary:  # special formatting required for dictionaries
                 printstring += f'{yellow(iterable[keys[i]])}\n'
             else:
                 printstring += indent_str + yellow(str(curr_value)) + '\n'
         
         # Continue recursion if curr_value is an iterable. 
-        if not(curr_value_is_primitive):
-            printstring += _recursively_add_vars(curr_value, label_index=i, indent_lvl=indent_lvl + 1)
+        if not curr_value_is_primitive:
+            printstring += _recursively_add_vars(curr_value, indent_lvl=indent_lvl + 1)
     return printstring
 
 
@@ -125,18 +136,45 @@ def ptest(*variables, inline=False):
 # formatted dir() function 
 def dir_(obj):
     import inspect
-    from inspect import isclass, isfunction, ismethod        
-    # meant to 'overide' inspect.getmembers()
-    def getmembers(obj, predicate):
-        member_tuples = inspect.getmembers(obj, predicate)
-        # extract and return just the names from the (name, value) tuples given by inspect module
-        names = [x[0] for x in member_tuples]
-        return [x for x in names if not x.startswith('_')]
-    
-    classes = getmembers(obj, isclass)
-    functions = getmembers(obj, isfunction)
-    methods = getmembers(obj, isclass)
-    return {'classes': classes, 'functions': functions, 'methods': methods}
+    from inspect import isclass, isfunction, ismethod, isbuiltin
+    reg_dir = dir(obj)
+    new_dir = {'classes': [], 'functions': [], 'methods': [], 'attributes': []}
+
+    # TODO figure out how to neatly print part of the doc string for object attributes
+    def attr_str(attr, attr_name):
+        # doc = attr.__doc__
+        # if isinstance(doc, str):
+        #     doc = doc[:40].replace('\\n', '  ').replace('\r', '  ').strip()
+        #     return (attr_name, doc)
+        # else:
+        #     return attr_name
+        return attr_name
+
+    for x in reg_dir:
+        attr = getattr(obj, x)
+        if x.startswith('_') or x.isupper():
+            continue
+        elif isfunction(attr) or isbuiltin(attr):
+            new_dir['functions'].append(attr_str(attr, x))
+        elif isclass(attr):
+            new_dir['classes'].append(attr_str(attr, x))
+        elif ismethod(attr):
+            new_dir['methods'].append(attr_str(attr, x))
+        else:
+            new_dir['attributes'].append(attr_str(attr, x))
+    return new_dir
 
 
+
     
+if __name__ == '__main__':
+    # import json
+    # with open('list of dictionaries.json', 'r') as x:
+    #     js = json.load(x)
+    #     test(js)
+    from turtle import Turtle
+    import turtle
+    t = Turtle()
+    test(dir_(turtle))
+
+

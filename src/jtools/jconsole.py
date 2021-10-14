@@ -168,13 +168,4 @@ def dir_(obj):
 
     
 if __name__ == '__main__':
-    # import json
-    # with open('list of dictionaries.json', 'r') as x:
-    #     js = json.load(x)
-    #     test(js)
-    from turtle import Turtle
-    import turtle
-    t = Turtle()
-    test(dir_(turtle))
-
-
+    pass

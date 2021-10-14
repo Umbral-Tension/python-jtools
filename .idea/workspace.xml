@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="122ab47e-524c-4f54-83f0-72d864c6599d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/python-jtools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/python-jtools.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="122ab47e-524c-4f54-83f0-72d864c6599d" name="Changes" comment="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree.">
       <change beforePath="$PROJECT_DIR$/src/jtools/jconsole.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/jtools/jconsole.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,6 +59,29 @@
       <option name="presentableId" value="Default" />
       <updated>1634123874986</updated>
     </task>
+    <task id="LOCAL-00001" summary="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree.">
+      <created>1634181225301</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1634181225301</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree." />
+    <option name="LAST_COMMIT_MESSAGE" value="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree." />
   </component>
 </project>

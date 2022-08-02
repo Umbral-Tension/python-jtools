@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="122ab47e-524c-4f54-83f0-72d864c6599d" name="Changes" comment="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree.">
-      <change beforePath="$PROJECT_DIR$/src/jtools/jconsole.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/jtools/jconsole.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +20,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunManager">
@@ -66,7 +67,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634181225301</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree.">
+      <created>1634181379873</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1634181379873</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -79,6 +87,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree." />

@@ -126,19 +126,26 @@ class RedditScript:
         return True
 
     def check_subreddit_status(self, subreddits):
-        """determine if given subreddits are open, banned, or nonexistent.
+        """determine if given subreddits are open, banned, or nonexistent and whether they are marked NSFW.
             Suggest max of 100 subreddits at a time. Returns list of tuples [(subreddit, status)]
 
             subreddits -- string or list of strings
         """
         api_response = self.get_subreddit_listings(subreddits)
         sub_listings = api_response['subreddit_listings']
-        nonexistant = [(x, 'nonexistant') for x in api_response['nonexistant_subreddits']]
+        nonexistant = [(x, 'nonexistant', 'null') for x in api_response['nonexistant_subreddits']]
         results = []
         for sub in sub_listings:
             name = sub['data']['display_name']
+            over18 = sub['data']['over18']
             status = 'banned' if self._check_sub_ban_status(sub) else 'open'
-            results.append((name, status))
+            if status == 'banned':
+                content_type = 'null'
+            elif over18:
+                content_type = 'nsfw'
+            else:
+                content_type = 'sfw'
+            results.append((name, status, content_type))
         results.extend(nonexistant)
         return results
 
@@ -157,7 +164,7 @@ if __name__ == '__main__':
     thirty = subs * 6
     fifty = subs * 10
     hudnred = subs * 20
-    result = r.check_subreddit_status(hudnred + banned)
+    result = r.check_subreddit_status(subs)
     test(result, len(result), r.last_known_rate_limit_remaining)
     pass
 

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="122ab47e-524c-4f54-83f0-72d864c6599d" name="Changes" comment="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree.">
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/python-jtools.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/python-jtools.iml" afterDir="false" />
+    <list default="true" id="122ab47e-524c-4f54-83f0-72d864c6599d" name="Changes" comment="added functionality to RedditScript class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jtools/access_token.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/jtools/access_token.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jtools/jreddit.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/jtools/jreddit.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -102,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634181379873</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added functionality to RedditScript() class">
+      <created>1659763409702</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1659763409702</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -119,20 +122,21 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree." />
-    <option name="LAST_COMMIT_MESSAGE" value="changed test() to not attempt to recurse into nonstandard iterables. Tidied up the test() code. got dir working to an acceptable degree." />
+    <MESSAGE value="added functionality to RedditScript() class" />
+    <option name="LAST_COMMIT_MESSAGE" value="added functionality to RedditScript() class" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/jtools/jreddit.py</url>
-          <line>161</line>
+          <line>168</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/jtools/jreddit.py</url>
-          <line>160</line>
-          <option name="timeStamp" value="6" />
+          <line>143</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -94,7 +94,6 @@ class RedditScript:
             if ',' in subreddits[x]:
                 nonexistant_subs.append(subreddits.pop(x))
         subreddits = [str.lower(x) for x in subreddits]
-        #subreddits = list(set(subreddits)) # Remove duplicates
         subsstr = ','.join(subreddits)
 
         # Make API call
@@ -127,13 +126,14 @@ class RedditScript:
 
     def check_subreddit_status(self, subreddits):
         """determine if given subreddits are open, banned, or nonexistent and whether they are marked NSFW.
-            Suggest max of 100 subreddits at a time. Returns list of tuples [(subreddit, status)]
+            Suggest max of 100 subreddits at a time. Returns list of dicts [{name, status, content_type}]
 
             subreddits -- string or list of strings
         """
         api_response = self.get_subreddit_listings(subreddits)
         sub_listings = api_response['subreddit_listings']
-        nonexistant = [(x, 'nonexistant', 'null') for x in api_response['nonexistant_subreddits']]
+        #nonexistant = [(x, 'nonexistant', 'null') for x in api_response['nonexistant_subreddits']]
+        nonexistant = [{'name': x, 'status': 'nonexistant', 'content_type': 'null'} for x in api_response['nonexistant_subreddits']]
         results = []
         for sub in sub_listings:
             name = sub['data']['display_name']
@@ -145,7 +145,7 @@ class RedditScript:
                 content_type = 'nsfw'
             else:
                 content_type = 'sfw'
-            results.append((name, status, content_type))
+            results.append({'name': name, 'status': status, 'content_type': content_type})
         results.extend(nonexistant)
         return results
 

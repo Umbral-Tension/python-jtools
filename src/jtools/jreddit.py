@@ -84,16 +84,16 @@ class RedditScript:
             Suggest max of 100 listings at a time.
         subreddits -- string or list of strings
         """
-        nonexistant_subs = []
-        # Clean up list of subreddits and prepare the comma seperated string needed in the API call
+        nonexistent_subs = []
+        # Clean up list of subreddits and prepare the comma separated string needed in the API call
         if type(subreddits) == str:
-            subreddits = [subreddits.lower()]
+            subreddits = [subreddits.casefold()]
         # names with commas in them can't be real and need to be removed before the api call so they
         # don't fuck up the sr_name query string.
         for x in range(len(subreddits)):
             if ',' in subreddits[x]:
-                nonexistant_subs.append(subreddits.pop(x))
-        subreddits = [str.lower(x) for x in subreddits]
+                nonexistent_subs.append(subreddits.pop(x))
+        subreddits = [str.casefold(x) for x in subreddits]
         subsstr = ','.join(subreddits)
 
         # Make API call
@@ -108,10 +108,10 @@ class RedditScript:
         j = response.json()
         returned_subs_listings = [x for x in j['data']['children'] if x['kind'] == 't5']
         if len(subreddits) != len(returned_subs_listings):
-            returned_subs_names = [x['data']['display_name'].lower() for x in returned_subs_listings]
-            nonexistant_subs = [x for x in subreddits if x not in returned_subs_names]
+            returned_subs_names = [x['data']['display_name'].casefold() for x in returned_subs_listings]
+            nonexistent_subs = [x for x in subreddits if x not in returned_subs_names]
 
-        return {'subreddit_listings': returned_subs_listings, 'nonexistant_subreddits': nonexistant_subs}
+        return {'subreddit_listings': returned_subs_listings, 'nonexistent_subreddits': nonexistent_subs}
 
     def _check_sub_ban_status(self, subreddit):
         """determine if given subreddit is banned
@@ -132,8 +132,9 @@ class RedditScript:
         """
         api_response = self.get_subreddit_listings(subreddits)
         sub_listings = api_response['subreddit_listings']
-        #nonexistant = [(x, 'nonexistant', 'null') for x in api_response['nonexistant_subreddits']]
-        nonexistant = [{'name': x, 'status': 'nonexistant', 'content_type': 'null'} for x in api_response['nonexistant_subreddits']]
+        nonexistent = [
+            {'name': x, 'status': 'nonexistent', 'content_type': 'null'}
+            for x in api_response['nonexistent_subreddits']]
         results = []
         for sub in sub_listings:
             name = sub['data']['display_name']
@@ -146,7 +147,7 @@ class RedditScript:
             else:
                 content_type = 'sfw'
             results.append({'name': name, 'status': status, 'content_type': content_type})
-        results.extend(nonexistant)
+        results.extend(nonexistent)
         return results
 
 
@@ -164,7 +165,7 @@ if __name__ == '__main__':
     thirty = subs * 6
     fifty = subs * 10
     hudnred = subs * 20
-    result = r.check_subreddit_status(subs)
+    result = r.check_subreddit_status(banned)
     test(result, len(result), r.last_known_rate_limit_remaining)
     pass
 

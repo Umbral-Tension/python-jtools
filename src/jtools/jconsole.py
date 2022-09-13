@@ -38,7 +38,9 @@ def underline(text=''):
 def bold(text=''):
     return '\033[1m' + str(text) + endc
 
-
+def q(str):
+    return f'"{str}"'
+    
 def yes_no(s=''):
     """Prompt user for a yes or no response."""
     while True:
@@ -77,12 +79,12 @@ def _recursively_add_vars(iterable, indent_lvl=0):
     iterable_is_dictionary = isinstance(iterable, dict)
     if iterable_is_dictionary:
         keys = list(iterable.keys())
-    # The first call of recursively...() is always done by test() which always passes in its *variables parameter.
+    # The first call of _recursively...() is always done by test() which always passes in its *variables parameter.
     # *variables is an iterable so there is no 'isIterable' check necessary at this outer scope. 
     for i in range(len(iterable)): 
         
         # the 0th indentation lvl refers to the top lvl variables that were actually passed to the test() function.
-        # These will be labeled in the display as " test_var 2: " and so on. 
+        # These will be labeled in the display as "test_var 2: " and so on. 
         if indent_lvl == 0:
             printstring += bold(purple(f'test_var {i}:\n'))
 

@@ -62,7 +62,16 @@ def exit_app(exit_message=''):
 def cls():
     os.system('cls')
 
+def zen(message='here', title=f'debug info'):
+    """Use zenity on linux to display a popup window showing the content of message."""
+    os.system(f'zenity --title "{title}" --info --text "{message}"')
+
+def test_(*variables):
+    """returns the pretty-print string from test() instead of printing it."""
+    return _recursively_add_vars(variables)
+
 def test(*variables):
+    """pretty print all items in *variables."""
     colorama.reinit()
     if len(variables) == 0:
         print(bold(blue('here')))

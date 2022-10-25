@@ -116,13 +116,12 @@ def _recursively_add_vars(iterable, indent_lvl=0):
                                   or (isinstance(curr_value, Iterable) and type(curr_value) not in builtin_types)
 
         indent_str = base_indent * indent_lvl
-        if indent_lvl > 0 and i == 0:
-            itertype = type(iterable)
-            printstring += f'{indent_str}{bold(itertype)}\n'
         
         if iterable_is_dictionary:  # we always want to print dictionary keys, even if their value is another iterable
             printstring += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")} '
             if not curr_value_is_primitive:
+                # print type of the current key's value (i.e. the type of the upcoming iterable)
+                printstring += f'{bold(type(curr_value))}'
                 # don't want to start printing a lower nested iterable on the same line as the upper dictionary key
                 printstring += '\n'
         if curr_value_is_primitive:
@@ -133,6 +132,9 @@ def _recursively_add_vars(iterable, indent_lvl=0):
         
         # Continue recursion if curr_value is an iterable. 
         if not curr_value_is_primitive:
+            # type info will already have been printed if iterable is a dictionary. 
+            if not iterable_is_dictionary:
+                printstring += f'{indent_str}{bold(type(curr_value))}\n'
             printstring += _recursively_add_vars(curr_value, indent_lvl=indent_lvl + 1)
     return printstring
 

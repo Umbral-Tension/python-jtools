@@ -117,6 +117,7 @@ def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4
         #  simple iterables are recursed into eg (list/dict/set/tuple).
         curr_value_is_primitive = isinstance(curr_value, (str, set)) or not isinstance(curr_value, Iterable) \
                                   or (isinstance(curr_value, Iterable) and type(curr_value) not in builtin_types)
+        curr_val_type = str(type(curr_value)).replace('class', '').replace("'", "").replace(' ', '')
 
         keyval_str = ''
         if iterable_is_dictionary:  # we always want to print dictionary keys, even if their associated value is another iterable
@@ -124,7 +125,7 @@ def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4
             if not curr_value_is_primitive:
                 # print type of the current key's value (i.e. the type of the upcoming iterable)
                 # also end line because we don't want to start printing a lower nested iterable on the same line as the upper dictionary key
-                keyval_str += f'{bold(type(curr_value))}'
+                keyval_str += f'{bold(curr_val_type)}'
                 lol.append(keyval_str)
         if curr_value_is_primitive:
             if indent_lvl == 0:
@@ -141,7 +142,7 @@ def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4
         if not curr_value_is_primitive:
             # type info will already have been printed if iterable is a dictionary. 
             if not iterable_is_dictionary and indent_lvl != 0:
-                lol.append(f'{indent_str}{cyan(f"{i}|")}{bold(type(curr_value))}')
+                lol.append(f'{indent_str}{cyan(f"{i}|")}{bold(curr_val_type)}')
             lol = _recursively_add_vars(curr_value, list_of_lines=lol, indent_lvl=indent_lvl+1)
     
     # prep lol to be returned to test() function. 

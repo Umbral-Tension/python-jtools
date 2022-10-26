@@ -1,0 +1,164 @@
+{
+    "artists": {
+        "Alex Burey": {
+            "albums": {
+                "Family Stone EP": {
+                    "songs": {
+                        "Come Over": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Family Stone EP/03. Come Over.flac",
+                            "artist": "Alex Burey",
+                            "album": "Family Stone EP",
+                            "track": "03",
+                            "title": "Come Over"
+                        },
+                        "Family Stone": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Family Stone EP/01. Family Stone.flac",
+                            "artist": "Alex Burey",
+                            "album": "Family Stone EP",
+                            "track": "01",
+                            "title": "Family Stone"
+                        },
+                        "You Won't Even Dream": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Family Stone EP/02. You Won't Even Dream.flac",
+                            "artist": "Alex Burey",
+                            "album": "Family Stone EP",
+                            "track": "02",
+                            "title": "You Won't Even Dream"
+                        },
+                        "Mother": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Family Stone EP/04. Mother.flac",
+                            "artist": "Alex Burey",
+                            "album": "Family Stone EP",
+                            "track": "04",
+                            "title": "Mother"
+                        }
+                    }
+                },
+                "Inside World (EP)": {
+                    "songs": {
+                        "Amen": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Inside World (EP)/02. Amen.flac",
+                            "artist": "Alex Burey",
+                            "album": "Inside World (EP)",
+                            "track": "02",
+                            "title": "Amen"
+                        },
+                        "Dome Creed": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Inside World (EP)/01. Dome Creed.flac",
+                            "artist": "Alex Burey",
+                            "album": "Inside World (EP)",
+                            "track": "01",
+                            "title": "Dome Creed"
+                        },
+                        "The Intimidator": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Inside World (EP)/04. The Intimidator.flac",
+                            "artist": "Alex Burey",
+                            "album": "Inside World (EP)",
+                            "track": "04",
+                            "title": "The Intimidator"
+                        },
+                        "Inside World": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alex Burey/Inside World (EP)/03. Inside World.flac",
+                            "artist": "Alex Burey",
+                            "album": "Inside World (EP)",
+                            "track": "03",
+                            "title": "Inside World"
+                        }
+                    }
+                }
+            }
+        },
+        "Alohaha": {
+            "albums": {
+                "Alohaha": {
+                    "songs": {
+                        "Side B": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alohaha/Alohaha/02. Side B.flac",
+                            "artist": "Alohaha",
+                            "album": "Alohaha",
+                            "track": "02",
+                            "title": "Side B"
+                        },
+                        "Side A": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alohaha/Alohaha/01. Side A.flac",
+                            "artist": "Alohaha",
+                            "album": "Alohaha",
+                            "track": "01",
+                            "title": "Side A"
+                        }
+                    }
+                }
+            }
+        },
+        "Alvvays": {
+            "albums": {
+                "Alvvays": {
+                    "songs": {
+                        "Adult Diversion": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/01. Adult Diversion.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "01",
+                            "title": "Adult Diversion"
+                        },
+                        "Party Police": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/05. Party Police.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "05",
+                            "title": "Party Police"
+                        },
+                        "Red Planet": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/09. Red Planet.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "09",
+                            "title": "Red Planet"
+                        },
+                        "Dives": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/07. Dives.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "07",
+                            "title": "Dives"
+                        },
+                        "The Agency Group": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/06. The Agency Group.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "06",
+                            "title": "The Agency Group"
+                        },
+                        "Next Of Kin": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/04. Next Of Kin.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "04",
+                            "title": "Next Of Kin"
+                        },
+                        "Archie, Marry Me": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/02. Archie, Marry Me.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "02",
+                            "title": "Archie, Marry Me"
+                        },
+                        "Atop A Cake": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/08. Atop A Cake.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "08",
+                            "title": "Atop A Cake"
+                        },
+                        "Ones Who Love You": {
+                            "path": "/home/jeremy/Desktop/music_test_library/Alvvays/Alvvays/03. Ones Who Love You.flac",
+                            "artist": "Alvvays",
+                            "album": "Alvvays",
+                            "track": "03",
+                            "title": "Ones Who Love You"
+                        }
+                    }
+                }
+            }
+        }   }
+}

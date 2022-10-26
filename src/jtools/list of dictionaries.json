@@ -1,1 +1,36 @@
-[{"id": "b307ad9a-453d-417d-bcc9-f6f9b59cb064", "type": "Album", "title": "Small Steps, Heavy Hooves", "first-release-date": "2007-02-06", "primary-type": "Album"}, {"id": "290004b0-90d9-3dea-b7f6-00589a44e56f", "type": "Album", "title": "Drunk Like Bible Times", "first-release-date": "2008-09-30", "primary-type": "Album"}, {"id": "832010a1-b6af-4435-8801-ec74afcaae84", "type": "EP", "title": "2nd Demo", "first-release-date": "2005", "primary-type": "EP", "secondary-type-list": ["Demo"]}, {"id": "faa99f0f-d088-44f3-85e4-eb4acb6807f6", "type": "EP", "title": "1st Demo", "first-release-date": "2006", "primary-type": "EP", "secondary-type-list": ["Demo"]}]
+[
+    {
+        "id": "b307ad9a-453d-417d-bcc9-f6f9b59cb064",
+        "type": "Album",
+        "title": "Small Steps, Heavy Hooves",
+        "first-release-date": "2007-02-06",
+        "primary-type": "Album"
+    },
+    {
+        "id": "290004b0-90d9-3dea-b7f6-00589a44e56f",
+        "type": "Album",
+        "title": "Drunk Like Bible Times",
+        "first-release-date": "2008-09-30",
+        "primary-type": "Album"
+    },
+    {
+        "id": "832010a1-b6af-4435-8801-ec74afcaae84",
+        "type": "EP",
+        "title": "2nd Demo",
+        "first-release-date": "2005",
+        "primary-type": "EP",
+        "secondary-type-list": [
+            "Demo"
+        ]
+    },
+    {
+        "id": "faa99f0f-d088-44f3-85e4-eb4acb6807f6",
+        "type": "EP",
+        "title": "1st Demo",
+        "first-release-date": "2006",
+        "primary-type": "EP",
+        "secondary-type-list": [
+            "Demo"
+        ]
+    }
+]

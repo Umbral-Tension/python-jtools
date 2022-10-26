@@ -3,14 +3,21 @@ import json
 
 import os.path
 BASEDIR = os.path.dirname(__file__)
-filepath = os.path.join(BASEDIR, 'list of dictionaries.json')
-with open(filepath, 'r') as f:
-    samp = json.load(f)
-
-#fix handling of set objects, fix indent multiply by 0 problem
-jc.test('candor', [2, 3, ['a', 'b', 'c'], 4, 6], {'apple': 'camp'})
-
-#jc.test(samp)
 
 
+with open(os.path.join(BASEDIR, 'mixed_list_dict.json'), 'r') as f:
+    mixed_list_dict = json.load(f)
+
+with open(os.path.join(BASEDIR, 'deep_nested_dict.json'), 'r') as f:
+    deep_nested_dict = json.load(f)
+
+with open(os.path.join(BASEDIR, 'list of dictionaries.json'), 'r') as f:
+    list_of_dicts = json.load(f)
+
+
+jc.test(mixed_list_dict)
+
+jc.test(list_of_dicts)
+
+jc.test(deep_nested_dict)
  

@@ -1,4 +1,5 @@
 from collections.abc import Iterable
+from typing import KeysView
 import colorama
 from colorama import Fore
 import progress.bar # console progress bar module
@@ -66,25 +67,29 @@ def zen(message='here', title=f'debug info'):
     """Use zenity on linux to display a popup window showing the content of message."""
     os.system(f'zenity --title "{title}" --info --text "{message}"')
 
-def test_(*variables):
+def test_(*variables, indent=2, tracers=True):
     """returns the pretty-print string from test() instead of printing it."""
     return _recursively_add_vars(variables)
 
-def test(*variables):
+def test(*variables, indent=4, tracers=True):
     """pretty print all items in *variables."""
     colorama.reinit()
     if len(variables) == 0:
         print(bold(blue('here')))
     else:
-        print(_recursively_add_vars(variables))
+        print('\n'.join(_recursively_add_vars(variables, indent=indent, tracers=tracers)))
 
+import builtins
+builtin_types = [getattr(builtins, d) for d in dir(builtins) if isinstance(getattr(builtins, d), type)]
 
-def _recursively_add_vars(iterable, indent_lvl=0):
-    """Recurse into iterables and add their values to the printstring that test() will ultimately display.
+def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4, tracers=True):
+    """Recurse into iterables, adding their values to the printstring that test() will ultimately display.
 
     This function is only called from within test()"""
-    printstring = ''
-    base_indent = '    '
+    lol = list_of_lines
+    if lol is None:
+        lol = []
+    indent_str = ' ' * indent * indent_lvl
     iterable_is_dictionary = isinstance(iterable, dict)
     if iterable_is_dictionary:
         keys = list(iterable.keys())
@@ -95,7 +100,7 @@ def _recursively_add_vars(iterable, indent_lvl=0):
         # the 0th indentation lvl refers to the top lvl variables that were actually passed to the test() function.
         # These will be labeled in the display as "test_var 2: " and so on. 
         if indent_lvl == 0:
-            printstring += bold(purple(f'test_var {i}:\n'))
+            lol.append(bold(purple(f'var {i}:')))
 
         # curr_value is the single object 'under consideration' (for a given loop iteration of a given function call)
         # It will be checked to see if it is a simple value that's okay to print, or if it is an iterable that needs to
@@ -110,35 +115,39 @@ def _recursively_add_vars(iterable, indent_lvl=0):
         # because it makes sense to print these primitives 'as-is'
         # TODO Look into __get_item__ implementation to support recursion into non-standard iterables. Currently only
         #  simple iterables are recursed into eg (list/dict/set/tuple).
-        import builtins
-        builtin_types = [getattr(builtins, d) for d in dir(builtins) if isinstance(getattr(builtins, d), type)]
         curr_value_is_primitive = isinstance(curr_value, (str, set)) or not isinstance(curr_value, Iterable) \
                                   or (isinstance(curr_value, Iterable) and type(curr_value) not in builtin_types)
 
-        indent_str = base_indent * indent_lvl
-        
-        if iterable_is_dictionary:  # we always want to print dictionary keys, even if their value is another iterable
-            printstring += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")} '
+        keyval_str = ''
+        if iterable_is_dictionary:  # we always want to print dictionary keys, even if their associated value is another iterable
+            keyval_str += f'{indent_str}{cyan("key:")}{yellow(keys[i])}{cyan(" value:")}'
             if not curr_value_is_primitive:
                 # print type of the current key's value (i.e. the type of the upcoming iterable)
-                printstring += f'{bold(type(curr_value))}'
-                # don't want to start printing a lower nested iterable on the same line as the upper dictionary key
-                printstring += '\n'
+                # also end line because we don't want to start printing a lower nested iterable on the same line as the upper dictionary key
+                keyval_str += f'{bold(type(curr_value))}'
+                lol.append(keyval_str)
         if curr_value_is_primitive:
+            if indent_lvl == 0:
+                indent_str += ' ' * indent
             if iterable_is_dictionary:  # special formatting required for dictionaries
-                printstring += f'{yellow(iterable[keys[i]])}\n'
+                keyval_str += f'{yellow(iterable[keys[i]])}'
+                lol.append(keyval_str)
+            elif isinstance(iterable, list):
+                lol.append(indent_str + cyan(f'{i}|') + yellow(str(curr_value)))
             else:
-                printstring += indent_str + yellow(str(curr_value)) + '\n'
+                lol.append(indent_str + yellow(str(curr_value)))
         
         # Continue recursion if curr_value is an iterable. 
         if not curr_value_is_primitive:
             # type info will already have been printed if iterable is a dictionary. 
-            if not iterable_is_dictionary:
-                printstring += f'{indent_str}{bold(type(curr_value))}\n'
-            printstring += _recursively_add_vars(curr_value, indent_lvl=indent_lvl + 1)
-    return printstring
-
-
+            if not iterable_is_dictionary and indent_lvl != 0:
+                lol.append(f'{indent_str}{cyan(f"{i}|")}{bold(type(curr_value))}')
+            lol = _recursively_add_vars(curr_value, list_of_lines=lol, indent_lvl=indent_lvl+1)
+    
+    # prep lol to be returned to test() function. 
+    if indent_lvl == 0:
+        pass#ol = ''.join(lol)
+    return lol
 
 def ptest(*variables, inline=False):
     """ Pass all parameters to test() and then pause execution until user presses enter."""

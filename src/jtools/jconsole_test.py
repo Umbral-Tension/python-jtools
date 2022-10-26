@@ -15,9 +15,7 @@ with open(os.path.join(BASEDIR, 'list of dictionaries.json'), 'r') as f:
     list_of_dicts = json.load(f)
 
 
-jc.test(mixed_list_dict)
+jc.test('candor', [2,3,4], mixed_list_dict)
 
-jc.test(list_of_dicts)
-
-jc.test(deep_nested_dict)
- 
+# jc.test(list_of_dicts)
+# jc.test(deep_nested_dict)

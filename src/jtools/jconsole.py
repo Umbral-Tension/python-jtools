@@ -79,8 +79,11 @@ def test(*variables, indent=4, tracers=True):
     else:
         print('\n'.join(_recursively_add_vars(variables, indent=indent, tracers=tracers)))
 
-import builtins
-builtin_types = [getattr(builtins, d) for d in dir(builtins) if isinstance(getattr(builtins, d), type)]
+def ptest(*variables, inline=False):
+    """ Pass all parameters to test() and then pause execution until user presses enter."""
+    test(*variables)
+    input(red('Process paused. Press any key to un-pause'))
+
 
 def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4, tracers=True):
     """Recurse into iterables, adding their values to the printstring that test() will ultimately display.
@@ -115,8 +118,7 @@ def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4
         # because it makes sense to print these primitives 'as-is'
         # TODO Look into __get_item__ implementation to support recursion into non-standard iterables. Currently only
         #  simple iterables are recursed into eg (list/dict/set/tuple).
-        curr_value_is_primitive = isinstance(curr_value, (str, set)) or not isinstance(curr_value, Iterable) \
-                                  or (isinstance(curr_value, Iterable) and type(curr_value) not in builtin_types)
+        curr_value_is_primitive = is_primitive(curr_value)
         curr_val_type = str(type(curr_value)).replace('class', '').replace("'", "").replace(' ', '')
 
         keyval_str = ''
@@ -150,11 +152,17 @@ def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, indent=4
         pass#ol = ''.join(lol)
     return lol
 
-def ptest(*variables, inline=False):
-    """ Pass all parameters to test() and then pause execution until user presses enter."""
-    test(*variables)
-    input(red('Process paused. Press any key to un-pause'))
+import builtins
+builtin_types = [getattr(builtins, d) for d in dir(builtins) if isinstance(getattr(builtins, d), type)]
+def is_primitive(obj):
+    """Return true if obj is a 'primitive', defined as being one of (non-iterable, string, set, non-builtin iterable)."""
+    is_iterable = isinstance(obj, Iterable)
+    is_str_or_set = isinstance(obj, (str, set))
+    #iterable objects for which I wouldn't know how best to print them anyway are printed as is. 
+    is_non_standard_iterable = is_iterable and type(obj) not in builtin_types
 
+    is_primitive = is_str_or_set or not is_iterable or is_non_standard_iterable
+    return is_primitive
 
 # formatted dir() function 
 def dir_(obj):

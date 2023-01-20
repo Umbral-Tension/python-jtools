@@ -3,6 +3,7 @@ import colorama
 from colorama import Fore
 import progress.bar # console progress bar module
 import os
+import sys
 
 # initialize colorama so colors can be used in console text
 colorama.init()
@@ -57,7 +58,7 @@ def exit_app(exit_message=''):
     """Display exit message, then wait for user to press enter before running exit()"""
     print(red(exit_message))
     input('\nPress Enter to exit the program')
-    exit()
+    sys.exit(0)
 
 def cls():
     os.system('cls')

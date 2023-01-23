@@ -19,7 +19,7 @@ class RedditScript:
         self.client_id = client_id
         self.client_secret = client_secret
         self.user_agent = user_agent
-        self.TOKEN_CACHE_FILE = os.path.dirname(__file__) + '/access_token.txt'
+        self.TOKEN_CACHE_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), '/../../resources/access_token.txt'))
         self.token = self.get_client_credentials_token()
         self.last_known_rate_limit_remaining = 0
 

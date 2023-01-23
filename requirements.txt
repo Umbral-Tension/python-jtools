@@ -1,5 +1,0 @@
-jtools~=0.0.0
-requests~=2.26.0
-colorama~=0.4.4
-progress~=1.6
-setuptools~=57.4.0

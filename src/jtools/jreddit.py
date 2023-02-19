@@ -2,7 +2,7 @@
 Module for creating a RedditScript class that authorizes with Reddit via the OAuth client-credentials grant type. The RedditScript 
 class provides an access token to be be used for simple userless API access. One or more methods for this type of access are included. 
 
-For other Reddit API access, use the PRAW API wrapper instead.
+For other user-based Reddit API access, use the PRAW API wrapper instead.
 """
 import requests
 import json

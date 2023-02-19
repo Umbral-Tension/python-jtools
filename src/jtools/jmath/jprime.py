@@ -7,6 +7,7 @@ class JPrime():
         self.primes = [2, 3]
         self._multiples = {}
         self._greatest_checked_val = 3
+        
     def isprime(self, num):
         if self._trivial_nonprime(num):
             return False
@@ -16,7 +17,7 @@ class JPrime():
     def get_prime_range(self, upperbound, lowerbound = 2):
         self._extend_primes(upperbound)
         selection_iterator = itertools.filterfalse(lambda x: x < lowerbound or x > upperbound, self.primes)
-        return [item for item in selection_iterator]
+        return list(selection_iterator)
 
     def clear_primes(self):
         self.primes = [2, 3]

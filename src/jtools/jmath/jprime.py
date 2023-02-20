@@ -7,6 +7,7 @@ class JPrime():
         self.primes = [2, 3]
         self._multiples = {}
         self._greatest_checked_val = 3
+        self.redundant_checks = 0
         
     def isprime(self, num):
         if self._trivial_nonprime(num):
@@ -36,7 +37,10 @@ class JPrime():
         """Erotasthenes' Sieve
 
         A minimum "base" is selected. The multiples of that base are calculated and removed from the numberlist.
-        The base is incremented and the process repeats. The remaining values in numberlist are primes."""
+        The base is incremented and the process repeats. The remaining values in numberlist are primes.
+        
+        @param num_range: ordered list of numbers to check. 
+        """
         # Note:
         #   Erotasthenes' sieve for the range 0-X only requires checking multiples of numbers less than sqrt(X), so
         #   base is only incremented up to sqrt(x).
@@ -49,17 +53,20 @@ class JPrime():
         #   incrementing m and crossing off (m*K) until that product exceeds the biggest number in num_range.
         #
         #   Any multiple of an even will be even (not prime). Thus: base += 2 to avoid checking them.
-        greatest_num = max(num_range)
+        greatest_num = num_range[-1]
         root = math.ceil(math.sqrt(greatest_num))
         for base in range(3, root+1, 2):
             if base not in self._multiples.keys():
-                self._multiples[base] = base
+                # ensures that the first m for a new base is base. So that you don't get redunant checks like base=5, m=3. That was already checked when base=m, m=5
+                self._multiples[base] = base*(base-2) 
 
-            m = (self._multiples[base] / base) + 2
+            m = int((self._multiples[base] / base)) + 2
             while True:
                 result = base * m
                 if result > greatest_num:
                     break
+                if self._greatest_checked_val < result:
+                    self._greatest_checked_val = result 
                 try:
                     num_range.remove(result)
                 except ValueError:
@@ -68,3 +75,17 @@ class JPrime():
             self._multiples[base] = base * (m - 2)
         return num_range
 
+
+
+if __name__ == '__main__':
+    p = JPrime()
+    #TODO Greatest checked value is not bein updated. 
+
+    print(p.isprime(15))
+    print(p.primes)
+    print(p.isprime(35))
+    print(p.primes)
+    print(p.isprime(15))
+
+
+    

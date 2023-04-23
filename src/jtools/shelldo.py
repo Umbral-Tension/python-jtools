@@ -1,5 +1,5 @@
 """module to make the running of many shell commands more convenient"""
-import jconsole as jc
+from . import jconsole as jc
 import os, shutil, sys
 import os.path as opath
 import shlex
@@ -31,7 +31,7 @@ class Shelldo:
         timestamp = timestamp[:timestamp.rfind('.')]
         self.logfile = f'{self.logdir}/shelldo log {timestamp}'
         try:
-            latestlog = f'{self.logdir}/@LATEST-LOG.txt'
+            latestlog = f'{self.logdir}/@LATEST-SHELLDO-LOG.txt'
             os.remove(latestlog)
         except FileNotFoundError:
             pass

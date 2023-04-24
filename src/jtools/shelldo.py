@@ -54,9 +54,13 @@ class Shelldo:
         self.actions = [] # format is [ [action, result], [action, result] ]
         self.curraction = ''
 
-    def inst_cmd(self, program):
-        """Return f'sudo {self.package_manager} -y install {program}'."""
-        return f'sudo {self.package_manager} -y install {program}'
+    def inst_cmd(self, program, uninstall=False):
+        """Return platform specific install/uninstall command ."""
+        if not uninstall:
+            return f'sudo {self.package_manager} -y install {program}'
+        if uninstall:
+            actions = {'dnf': 'uninstall', 'apt': 'remove'}
+            return f'sudo {self.package_manager} -y {actions[self.package_manager]} {program}'
 
     def set_action(self, description, noprint=False, nocolor=False):
         """Update and print the current action."""
@@ -162,4 +166,3 @@ class Shelldo:
         return True
 
 
-s = Shelldo()

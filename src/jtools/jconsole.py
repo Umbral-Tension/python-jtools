@@ -91,12 +91,17 @@ def ptest(*variables, inline=False):
     input(red('Process paused. Press any key to un-pause'))
 
 
-def _recursively_add_vars(iterable, list_of_lines = [], indent_lvl=0, droplines=[], indent=4, tracers=True, truncate=True):
+def _recursively_add_vars(iterable, list_of_lines = None, indent_lvl=0, droplines=None, indent=4, tracers=True, truncate=True):
     """Recurse into iterables, adding their values to the printstring that test() will ultimately display. This function 
     is only called from within test()
     
     @param droplines: list of indent lvls. Tracks which indentation lvls currently need tracer dots.
     """
+    if list_of_lines is None:
+        list_of_lines = []
+    if droplines is None:
+        droplines = []
+    
     lol = list_of_lines
     indent_str = ' ' * indent * indent_lvl
     iterable_is_dictionary = isinstance(iterable, dict)
@@ -230,3 +235,4 @@ def dir_(obj):
     
 if __name__ == '__main__':
     pass
+

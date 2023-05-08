@@ -59,7 +59,7 @@ class Shelldo:
         if not uninstall:
             return f'sudo {self.package_manager} -y install {program}'
         if uninstall:
-            actions = {'dnf': 'uninstall', 'apt': 'remove'}
+            actions = {'dnf': 'remove', 'apt': 'remove'}
             return f'sudo {self.package_manager} -y {actions[self.package_manager]} {program}'
 
     def set_action(self, description, noprint=False, nocolor=False):
@@ -69,9 +69,10 @@ class Shelldo:
         self.actions.append([description])
         if not noprint:
             if nocolor:
-                print(f'---->  {self.curraction}')
+                print(f'[starting]:  {self.curraction}')
             else:
-                print(jc.bold(jc.yellow('---->  ')+f'{self.curraction}'))
+                starting = jc.bold(jc.green('starting'))
+                print(f'[{starting}]:  {self.curraction}')
 
     def set_result(self, result, action:str=None, nocolor=False, norecord=False, noprint=False):
         """record and/or print the specified result of the specified action.
@@ -92,10 +93,10 @@ class Shelldo:
                     x.append(result)
         if not noprint:
             if nocolor:
-                print(f'[{result}]:  {action}')
+                print(f'[{result}]:  {action}\n')
             else:
                 result = jc.green(result) if result == "OK" else jc.red(result)
-                print(f'[{jc.bold(result)}]:  {action}')
+                print(f'[{jc.bold(result)}]:  {action}\n')
     
 
     def report(self):

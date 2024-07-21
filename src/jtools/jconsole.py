@@ -2,7 +2,6 @@ from collections.abc import Iterable
 from typing import KeysView
 import colorama
 from colorama import Fore
-import progress.bar # console progress bar module
 import os
 import sys
 
@@ -10,7 +9,6 @@ import sys
 colorama.init()
 # reset formatting
 endc = '\033[0m'
-Bar = progress.bar.Bar # allows scripts to access the Bar class by importing jconsole
 
 # return a string that will print the passed parameter in a given color
 def white(text):

@@ -144,9 +144,9 @@ class Shelldo:
                     cmd = shlex.split(x)
                     with Popen(cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, text=True) as p:
                         # print stdout
-                        if not quiet:
-                            for line in p.stdout:
-                                ft.writelines(f'\t\t{line}\n')
+                        for line in p.stdout:
+                            ft.writelines(f'\t\t{line}\n')
+                            if not quiet:
                                 print(line, end='') 
                         # wait for subprocess to finish
                         p.wait()
@@ -155,6 +155,8 @@ class Shelldo:
                         else:
                             if logall:
                                 self.log(True, x)
+                except UnicodeDecodeError:
+                    pass
                 except:
                     estring = traceback.format_exc()
                     print(estring)

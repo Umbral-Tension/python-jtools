@@ -8,8 +8,9 @@ from subprocess import Popen, PIPE, run, STDOUT
 import traceback
 from datetime import datetime
 
+
 class Shelldo:
-    def __init__(self, logdir):
+    def __init__(self, logdir, no_log=False):
         """Run sets of shell commands with chain(), logging the results.
         Allows to build a human readable list of actions and results that can 
         be printed as they're happening or as a full report all at once. 
@@ -19,13 +20,15 @@ class Shelldo:
             outcome = Shelldo.chain(['mkdir x', 'touch y'])\n
             Shelldo.set_result(outcome)\n
             ...more...\n
-            Shelldo.report()\n
+            print(Shelldo.report())\n
         
-        @param logdir: path where logs should be stored, defaults to cwd. 
+        @param logdir: directory where logs should be stored. 
         """ 
-        
-        self.logdir = logdir
-        os.makedirs(self.logdir, exist_ok=True)
+        if no_log:
+            self.logdir = os.devnull
+        else:
+            self.logdir = logdir 
+            os.makedirs(self.logdir, exist_ok=True)
 
         timestamp = str(datetime.now())
         timestamp = timestamp[:timestamp.rfind('.')]
@@ -84,35 +87,28 @@ class Shelldo:
             if x[0].casefold() == action.casefold():
                 x.append(result)
         if not noprint:
-            self.print_action(result, action, nocolor=nocolor)
+            print(self.action_str(result, action, nocolor=nocolor))
 
-    
 
-    def print_action(self, result, action, nocolor=False):
-        """"print the specified action/result combo. Does not reference shelldo object's action list. Merely prints the string arguments given.
+    def action_str(self, result, action, nocolor=False):
+        """return a string "[result]:  [action]" with or without color.
+        Does not reference shelldo object's action list. Merely formats the string arguments that are given.
         """
         if nocolor:
-                print(f'[{result}]:  {action}\n')
+            s = f'[{result}]:  {action}\n'
         else:
             result = jc.green(result) if result == "OK" else jc.red(result)
-            print(f'[{jc.bold(result)}]:  {action}\n')
+            s = f'[{jc.bold(result)}]:  {action}\n'
+        return s
 
             
-    def report(self):
-        """Print all actions and their results."""
-        print(jc.bold(jc.yellow('\n////// Report /////')))
+    def report(self, no_color=False):
+        """return a printable string report of all actions and their results."""
+        rep = '\n////// Report /////'
         for x in self.actions:
-            self.print_action(x[1], x[0])
+            rep+=self.action_str(x[1], x[0], nocolor=no_color)
+        return rep
         
-
-    def log(self, result, action):
-        """Add a line to the log file like \"[result]:  [action]\"
-        
-        @param result: may be specified with strings "ok/fail" or booleans. 
-        """
-        result = self._parseresult(result)
-        with open(self.logfile, 'a') as f:
-            f.writelines(f"[{result}]:  {action}\n")
 
     def _parseresult(self, result):
         if isinstance(result, str):
@@ -120,48 +116,53 @@ class Shelldo:
         return {True:"OK", False:"FAIL", "ok": "OK", "fail": "FAIL"}[result]
 
 
-    def chain(self, cmds:list, logall=False, ignore_exit_code=False, quiet=False):
-        """run a series of commands in the shell, returning False immediately
-         if one in the series exits with any non-zero value. Otherwise returns True.
-         IO redirection does not work with this method. 
-
-        commands are run using subprocess.Popen(bufsize=1, stdout=PIPE, stderr=PIPE, text=True)
+    def run(self, cmds:str|list[str], logall=False, ignore_exit_code=False, quiet=False, shell=False):
+        """run one or more shell commands (given as a string or a list of strings). 
+        - Returns False immediately if one in the series exits with any non-zero value. Otherwise returns True.
+        - If piping or IO redirection is used in any of cmds you must set shell=True.
+        - Commands that use inline conditionals like "&& ||" fail due to parsing errors. 
+        - commands are run using subprocess.Popen()
 
         
-        @param cmds: list of strings, each of which is a single shell command,
+        @param cmds: str or list of strings, each of which is a single shell command,
         such as "mv src dest".  
-        @param logall: if True, log each command that is run, not just those, that fail.
         @param ignore_exit_code: don't return if one of cmds returns non-zero.
         @param quiet: don't print stdout content as the subprocess makes it 
         available. 
         """
+        cmds = [cmds] if isinstance(cmds, str) else cmds
         with open(self.full_transcript, 'a') as ft:
             ft.writelines(f'ACTION: {self.curraction}\n')
-            
-            for x in cmds:
-                ft.writelines(f'\tCMD: {x}\n')
+            for i in range(len(cmds)):
+                ft.writelines(f'\tCMD: {cmds[i]}\n')
                 try:
-                    cmd = shlex.split(x)
-                    with Popen(cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, text=True) as p:
+                    cmd = cmds[i] if shell==True else shlex.split(cmds[i])
+                    with Popen(cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, text=True, shell=shell) as p:
                         # print stdout
                         for line in p.stdout:
-                            ft.writelines(f'\t\t{line}\n')
+                            ft.writelines(f'\t\t{line}')
                             if not quiet:
                                 print(line, end='') 
                         # wait for subprocess to finish
                         p.wait()
-                        if p.returncode != 0 and not ignore_exit_code:   
+                        if p.returncode != 0:
+                            ft.writelines([f'///////////////// PREVIOUS COMMAND FAILED return code:{p.returncode}\n'])
+                            if not ignore_exit_code:
+                                ft.writelines([
+                                f"////// aborted shelldo.run before the following commands were run:\n",
+                                f"////// {cmds[i+1:]}\n"])
                                 return False
-                        else:
-                            if logall:
-                                self.log(True, x)
                 except:
                     estring = traceback.format_exc()
                     print(estring)
                     ft.writelines(['\t\tPYTHON EXCEPTION:\n\t\t\t'] + ['\n\t\t\t'.join(estring.split('\n'))] + ['\t\t\t\n'])
-                    self.log(False, f'{x}\n\t{estring}')
+                    ft.writelines([
+                        f"////// aborted shelldo.run() before the following commands were run:\n",
+                        f"////// {cmds[i+1:]}"])
                     return False
             
         return True
+
+
 
 

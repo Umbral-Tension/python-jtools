@@ -13,7 +13,8 @@ class Shelldo:
     def __init__(self, logdir, no_log=False):
         """Run sets of shell commands with chain(), logging the results.
         Allows to build a human readable list of actions and results that can 
-        be printed as they're happening or as a full report all at once. 
+        be printed as they'
+        re happening or as a full report all at once. 
 
         The class is intended to be used something like:\n
             Shelldo.set_action('making a directory and a file')\n

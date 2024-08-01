@@ -145,7 +145,7 @@ class Shelldo:
                     with Popen(cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, text=True) as p:
                         # print stdout
                         for line in p.stdout:
-                            ft.writelines(f'\t\t{line}\n')
+                            ft.writelines(f'\t\t{line}')
                             if not quiet:
                                 print(line, end='') 
                         # wait for subprocess to finish

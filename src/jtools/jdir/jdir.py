@@ -3,67 +3,58 @@ import os.path as opath
 from jtools.jconsole import yes_no
 
 
-
-# rewrite using scandir and include directories
-def get_dir_size(pathstring):
-    """Calculate a directory's size in bytes."""
-    if not (opath.exists(pathstring) and opath.isdir(pathstring)):
-        return None
+# rewrite to handle symlinks correctly
+def scandirsize(pathstring):
+    """recursively calculate a directory's size in bytes."""
     size = 0
-    for dirpath, dirnames, filenames in os.walk(pathstring):
-        for f in filenames:
-            size += opath.getsize(opath.join(dirpath, f))
+    for x in os.scandir(pathstring):
+        if x.is_symlink():
+            continue # os.path.getsize() fails w/ FileNotFound for broken symlinks and it's not clear if its returning size of the link or the link's target. 
+        size += opath.getsize(x)
+                
+        if x.is_dir():
+            size += scandirsize(x.path)
     return size
 
 
-def get_all_filesystem_entries(pathstring, do_files=True, do_dirs=True):
-    """return a list of paths of all sub-directories and files below pathstring"""
-    ls = []
-    for dirpath, dirnames, filenames in os.walk(pathstring):
-        if do_files:
-            ls += [opath.join(dirpath, name) for name in filenames]
-        if do_dirs:    
-            ls += [opath.join(dirpath, name) for name in dirnames]
-    return ls
-
-
-def get_all_subdirs(pathstring):
-    return get_all_filesystem_entries(pathstring, do_files=False)
-
-
 def get_all_files(pathstring):
-    return get_all_filesystem_entries(pathstring, do_dirs=False)
-            
-                
-def get_file_count(pathstring, count=0):
-    """Recursively count the number of files in a directory."""
-    for dir_entry in os.scandir(pathstring):
-        if dir_entry.is_dir():
-            count = get_file_count(dir_entry.path, count)
-        else:
-            count += 1
-    return count
+    """recurse into pathstring to generate a list of all files and subdirectories below that point.
+    Returns a list of lists like: [[subdirectories], [sub-files]] ()"""
+    dirs = []
+    files = []
+    for dirpath, dirnames, filenames in os.walk(pathstring):
+        dirs += [opath.join(dirpath, name) for name in dirnames]
+        files += [opath.join(dirpath, name) for name in filenames]
+    return [dirs, files]
 
-def file_count_walk(pathstring, count=0):
-    return
 
-# Rewrite
-def dup_rename(file_name, pathstring):
-    """Return an alternative filename if 'file_name' already exists.
-    looks for an available filename using the pattern name_#
+def get_file_count(pathstring):
+    """recursively count the number of files and sub-directories below pathstring
+     returned as a tupe (num_dirs, num_files) """
+    d, f = 0, 0
+    for dirpath, dirnames, filenames in os.walk(pathstring):
+        d += len(dirnames)
+        f += len(filenames)
+    return (d,f)
+
+
+def dup_rename(pathstring):
+    """Return a path with an alternatively named last component (dirname/filename) 
+    if pathstring already exists. Looks for an available path using the pattern name_#
     """
-    ls = os.listdir(pathstring)
-    if file_name not in ls:
-        return file_name
+    if not opath.exists(pathstring):
+        return pathstring
     else:
+        ls = os.listdir(opath.dirname(pathstring))
+        basename, ext = opath.basename(pathstring), ""
+        if opath.isfile(pathstring):
+            basename, ext = opath.splitext(basename)
+    
         suffix = 2
-        tup = file_name.rsplit('.', 1)
-        name = tup[0]
-        ext = tup[1]
         while True:
-            rename = name + '_' + str(suffix) + '.' + ext
-            if rename not in ls:
-                return rename
+            newname = basename + '_' + str(suffix) + ext
+            if newname not in ls:
+                return opath.join(opath.dirname(pathstring), newname)
             else:
                 suffix += 1
 

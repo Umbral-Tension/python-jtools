@@ -1,3 +1,4 @@
+"""functions to help with filesystem related tasks"""
 import os, sys
 import os.path as opath
 from jtools.jconsole import yes_no
@@ -89,36 +90,21 @@ def is_danger_dir(pathstring):
 
 
 def diff(dir1, dir2):
-    """compare two directories to determin which dirs/files are unique to each directory."""
+    """compare two directory trees beginning at dir1 and dir2 respectively in order to find which dirs/files are unique to each tree.
+    - returns a tuple like ([dir1_uniques],[dir2_uniques]) the list [dir1_uniques] contains the paths of all dirs/files that appear only in dir1. 
+    - intended use is to compare two similar directory structures that more or less mirror each other but have minor differences. 
+    - treats dir1 and dir2 as root directories and compares their members relative to those roots. i.e. "/some_path/dir1/subdir/filex" "/some_other_path/dir2/subdir/filex" are the same file. 
+    - pathstrings are compared, NOT file contents. 
+    """
+    # list all dirs/files and remove first part of their paths to facilitate str comparison later. 
+    sep = os.path.sep
     ls1 = get_all_files(dir1)
-    ls1 = ls1[0] + ls1[1]
+    ls1 = [ x.replace(dir1, '').lstrip(sep)    for x in    ls1[0] + ls1[1] ]
     ls2 = get_all_files(dir2)
-    ls2 = ls2[0] + ls2[1]
+    ls2 = [ x.replace(dir2, '').lstrip(sep)    for x in    ls2[0] + ls2[1] ]
     
+    # find dirs files unique to teach tree and add the first part of their path back on. 
+    u1 = sorted([ opath.join(dir1, x)    for x in    ls1     if x not in ls2])
+    u2 = sorted([ opath.join(dir2, x)    for x in    ls2     if x not in ls1])
+    return u1, u2
 
-    ls1a = [x.replace(dir1, '').lstrip('/') for x in ls1]
-    ls2a = [x.replace(dir2, '').lstrip('/') for x in ls2]
-    
-    # test(ls1a, ls2a)
-    # for x in ls1a:
-    #     if 
-    #     if x not in ls2a:
-            # print(x)
-    u1 = [x for x in ls1a if x not in ls2a]
-    u2 = [x for x in ls2a if x not in ls1a]
-
-    test(u1, u2)
-    
-    return ls1a, ls2a
-
-from jtools.jconsole import test
-dir1 = '/media/jeremy/internal_6TB/rsync_backups/2024-08-09@22:05:10_(Full)'
-dir2 = '/media/jeremy/internal_6TB/rsync_backups/2024-08-09@22:24:06_(Incremental)'
-
-d = diff(dir1, dir2)
-# test(d)
-# import sys
-# ls = ''
-# for x in range(100000000):
-#     ls+=str(x)
-# print(formatbytes(sys.getsizeof(ls), 'MB'))

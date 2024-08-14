@@ -97,14 +97,34 @@ def diff(dir1, dir2):
     - pathstrings are compared, NOT file contents. 
     """
     # list all dirs/files and remove first part of their paths to facilitate str comparison later. 
+    from datetime import datetime
+    
+    start = datetime.now()
     sep = os.path.sep
     ls1 = get_all_files(dir1)
     ls1 = [ x.replace(dir1, '').lstrip(sep)    for x in    ls1[0] + ls1[1] ]
     ls2 = get_all_files(dir2)
     ls2 = [ x.replace(dir2, '').lstrip(sep)    for x in    ls2[0] + ls2[1] ]
-    
+    ostime = datetime.now() - start
+
+    start = datetime.now()
     # find dirs files unique to teach tree and add the first part of their path back on. 
     u1 = sorted([ opath.join(dir1, x)    for x in    ls1     if x not in ls2])
     u2 = sorted([ opath.join(dir2, x)    for x in    ls2     if x not in ls1])
+    listtime = datetime.now() - start
+    total = ostime + listtime
+    print(f"total: {total.total_seconds()}\n\
+          ostime: {ostime.total_seconds()}\n\
+          listtime: {listtime.total_seconds()}\n\
+          % ostime: {ostime.total_seconds()/total.total_seconds()*100}%")
     return u1, u2
 
+
+d1 = '/home/jeremy/dfull'
+d2 = '/home/jeremy/dinc'
+
+u1, u2 = diff(d1, d2)
+
+import jtools.jconsole as jc
+
+jc.test(u1, u2)

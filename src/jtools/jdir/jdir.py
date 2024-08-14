@@ -3,8 +3,15 @@ import os.path as opath
 from jtools.jconsole import yes_no
 
 
+def formatbytes(bytesize, unit="KB"):
+    """Convert storage size from bytes to the desired unit and return a formatted string"""
+    unit = unit.upper()
+    lookup = {"B": 1, "KB": pow(2, 10), "MB": pow(2, 20), "GB": pow(2, 30), "TB": pow(2, 40)}
+    return '{0:.2f}'.format(bytesize/lookup[unit]) + ' ' + unit
+
+
 # rewrite to handle symlinks correctly
-def scandirsize(pathstring):
+def get_size(pathstring):
     """recursively calculate a directory's size in bytes."""
     size = 0
     for x in os.scandir(pathstring):
@@ -13,7 +20,7 @@ def scandirsize(pathstring):
         size += opath.getsize(x)
                 
         if x.is_dir():
-            size += scandirsize(x.path)
+            size += get_size(x.path)
     return size
 
 
@@ -80,9 +87,38 @@ def is_danger_dir(pathstring):
 
     return False
 
-def formatbytes(bytesize, unit="KB"):
-    """Convert storage size from bytes to the desired unit and return a formatted string"""
-    unit = unit.upper()
-    lookup = {"B": 1, "KB": pow(2, 10), "MB": pow(2, 20), "GB": pow(2, 30), "TB": pow(2, 40)}
-    return '{0:.2f}'.format(bytesize/lookup[unit]) + ' ' + unit
 
+def diff(dir1, dir2):
+    """compare two directories to determin which dirs/files are unique to each directory."""
+    ls1 = get_all_files(dir1)
+    ls1 = ls1[0] + ls1[1]
+    ls2 = get_all_files(dir2)
+    ls2 = ls2[0] + ls2[1]
+    
+
+    ls1a = [x.replace(dir1, '').lstrip('/') for x in ls1]
+    ls2a = [x.replace(dir2, '').lstrip('/') for x in ls2]
+    
+    # test(ls1a, ls2a)
+    # for x in ls1a:
+    #     if 
+    #     if x not in ls2a:
+            # print(x)
+    u1 = [x for x in ls1a if x not in ls2a]
+    u2 = [x for x in ls2a if x not in ls1a]
+
+    test(u1, u2)
+    
+    return ls1a, ls2a
+
+from jtools.jconsole import test
+dir1 = '/media/jeremy/internal_6TB/rsync_backups/2024-08-09@22:05:10_(Full)'
+dir2 = '/media/jeremy/internal_6TB/rsync_backups/2024-08-09@22:24:06_(Incremental)'
+
+d = diff(dir1, dir2)
+# test(d)
+# import sys
+# ls = ''
+# for x in range(100000000):
+#     ls+=str(x)
+# print(formatbytes(sys.getsizeof(ls), 'MB'))

@@ -1,7 +1,7 @@
 """functions to help with filesystem related tasks"""
 import os, sys
 import os.path as opath
-from jtools.jconsole import yes_no
+from jtools.jconsole import yes_no, test
 
 
 def formatbytes(bytesize, unit="KB"):
@@ -25,15 +25,19 @@ def get_size(pathstring):
     return size
 
 
-def get_all_files(pathstring):
+def get_all_files(pathstring, combined=False):
     """recurse into pathstring to generate a list of all files and subdirectories below that point.
-    Returns a list of lists like: [[subdirectories], [sub-files]] ()"""
+    - Returns a list of lists like: [[subdirectories], [sub-files]] ()
+    - if combined is True, combine the dirs and files return lists into one list"""
     dirs = []
     files = []
     for dirpath, dirnames, filenames in os.walk(pathstring):
         dirs += [opath.join(dirpath, name) for name in dirnames]
         files += [opath.join(dirpath, name) for name in filenames]
-    return [dirs, files]
+    if combined:
+        return dirs + files
+    else:
+        return [dirs, files]
 
 
 def get_file_count(pathstring):
@@ -97,34 +101,12 @@ def diff(dir1, dir2):
     - pathstrings are compared, NOT file contents. 
     """
     # list all dirs/files and remove first part of their paths to facilitate str comparison later. 
-    from datetime import datetime
-    
-    start = datetime.now()
     sep = os.path.sep
-    ls1 = get_all_files(dir1)
-    ls1 = [ x.replace(dir1, '').lstrip(sep)    for x in    ls1[0] + ls1[1] ]
-    ls2 = get_all_files(dir2)
-    ls2 = [ x.replace(dir2, '').lstrip(sep)    for x in    ls2[0] + ls2[1] ]
-    ostime = datetime.now() - start
-
-    start = datetime.now()
-    # find dirs files unique to teach tree and add the first part of their path back on. 
+    ls1 = [ x.replace(dir1, '').lstrip(sep)    for x in    get_all_files(dir1, combined=True) ]
+    ls2 = [ x.replace(dir2, '').lstrip(sep)    for x in    get_all_files(dir2, combined=True) ]
+    # find dirs files unique to each tree and add the first part of their path back on. 
     u1 = sorted([ opath.join(dir1, x)    for x in    ls1     if x not in ls2])
     u2 = sorted([ opath.join(dir2, x)    for x in    ls2     if x not in ls1])
-    listtime = datetime.now() - start
-    total = ostime + listtime
-    print(f"total: {total.total_seconds()}\n\
-          ostime: {ostime.total_seconds()}\n\
-          listtime: {listtime.total_seconds()}\n\
-          % ostime: {ostime.total_seconds()/total.total_seconds()*100}%")
     return u1, u2
 
 
-d1 = '/home/jeremy/dfull'
-d2 = '/home/jeremy/dinc'
-
-u1, u2 = diff(d1, d2)
-
-import jtools.jconsole as jc
-
-jc.test(u1, u2)

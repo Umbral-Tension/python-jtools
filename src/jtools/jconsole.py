@@ -1,5 +1,4 @@
 from collections.abc import Iterable
-from typing import KeysView
 import colorama
 from colorama import Fore
 import os
@@ -9,8 +8,8 @@ import sys
 colorama.init()
 # reset formatting
 endc = '\033[0m'
-
-# return a string that will print the passed parameter in a given color
+ 
+# return a string that will print the passed parameter in a given color or formatting
 def white(text):
     return Fore.WHITE + str(text) + endc
 

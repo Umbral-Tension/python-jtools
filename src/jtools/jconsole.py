@@ -40,6 +40,20 @@ def bold(text=''):
 def q(str):
     return f'"{str}"'
     
+def erase_line():
+    """erase the line at the cursor's current position and set cursor position to the beginning of the line.
+    - useful when the cursor has not yet moved onto a new line, such as when using print(..., end="", flush=True)
+    """
+    print("\033[2K\r", end="", flush=True)  #\033[2K = erase line       \r = carriage return to beginning of line
+
+def erase_line_previous():
+    """erase the line above the cursor's current position and set cursor to the beginning of that line."""
+    print("\033[F\033[2K", end="", flush=True)     # \033[F = move to beginning of previous line \033[2K = erase line
+
+def clear():
+    """clear everything from screen and the scroll-buffer and set cursor to the top left corner of the terminal"""
+    print("\033[2J\033[0;0H")
+
 def yes_no(s=''):
     """Prompt user for a yes or no response."""
     while True:
@@ -58,8 +72,6 @@ def exit_app(exit_message=''):
     input('\nPress Enter to exit the program')
     sys.exit(0)
 
-def cls():
-    os.system('cls')
 
 def zen(message='here', title=f'debug info'):
     """Use zenity on linux to display a popup window showing the content of message."""

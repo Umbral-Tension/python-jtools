@@ -1,25 +1,25 @@
-from jtools.v2shelldo import Shelldo
-
-shelldo = Shelldo('/home/jeremy/')
-
-
-shelldo.set_action('doing stuff')
-
-# shelldo.run(['touch here', 'ls | wc ', 'touch /home/jeremy/here/newfile', 'ls -a | wc'], shell=True, ignore_exit_code=False)
-
-import shlex
-cmd = ["ls", "wc"]
-
-cmd = shlex.join(cmd)
-print(cmd)
-# s = shlex.split(cmd)
-# print(s)
+from jtools.shelldo import Shelldo
 from subprocess import run, Popen, PIPE, STDOUT
 import subprocess
+import shlex
 
-with Popen(cmd, bufsize=1, stdout=PIPE, stderr=STDOUT, text=True, shell=True) as p:
-    # print stdout
-    for line in p.stdout:
-        print(line, end='') 
-    # wait for subprocess to finish
-    p.wait()
+shelldo = Shelldo('/home/jeremy/')
+shelldo.set_action('doing stuff')
+shelldo.run(
+    ['touch here',
+    'touch crab || touch laugh ',
+    'touch /home/jeremy/newfile',
+    'ls -a | wc'],
+     shell=True, ignore_exit_code=False)
+
+shelldo.set_action('OTHERSTUFF')
+shelldo.run(
+    ['touch here2',
+    'touch crab || touch laugh ',
+    'touch /home/jeremy/sf/newfile',
+    'ls -a | wc'],
+     ignore_exit_code=True)
+
+
+
+

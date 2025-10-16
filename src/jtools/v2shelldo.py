@@ -120,13 +120,15 @@ class Shelldo:
     def run(self, cmds:str|list[str], logall=False, ignore_exit_code=False, quiet=False, shell=False):
         """run one or more shell commands (given as a string or a list of strings). 
         - Returns False immediately if one in the series exits with any non-zero value. Otherwise returns True.
-        - If piping or IO redirection is used in any of cmds you must set shell=True.
-        - Commands that use inline conditionals like "&& ||" fail due to parsing errors. 
         - commands are run using subprocess.Popen()
+        - commands that contain piping, IO redirection, conditionals (&& ||) will fail unless
+            1. shell=True
+            2. cmd is a single string that will be passed verbatim to /bin/sh
 
         
         @param cmds: str or list of strings, each of which is a single shell command,
         such as "mv src dest".  
+        @param shell: set shell=True to use IO redirection, conditionals (&& ||) or piping
         @param ignore_exit_code: don't return if one of cmds returns non-zero.
         @param quiet: don't print stdout content as the subprocess makes it 
         available. 
@@ -147,19 +149,19 @@ class Shelldo:
                         # wait for subprocess to finish
                         p.wait()
                         if p.returncode != 0:
-                            ft.writelines([f'///////////////// PREVIOUS COMMAND FAILED return code:{p.returncode}\n'])
+                            ft.writelines([f'\t///////////////// PREVIOUS COMMAND FAILED return code:{p.returncode}\n'])
                             if not ignore_exit_code:
                                 ft.writelines([
-                                f"////// aborted shelldo.run before the following commands were run:\n",
-                                f"////// {cmds[i+1:]}\n"])
+                                f"\t////// aborted shelldo.run before the following commands were run:\n",
+                                f"\t////// {cmds[i+1:]}\n"])
                                 return False
                 except:
                     estring = traceback.format_exc()
                     print(estring)
-                    ft.writelines(['\t\tPYTHON EXCEPTION:\n\t\t\t'] + ['\n\t\t\t'.join(estring.split('\n'))] + ['\t\t\t\n'])
+                    ft.writelines(['\tPYTHON EXCEPTION:\n\t\t\t'] + ['\n\t\t\t'.join(estring.split('\n'))] + ['\t\t\t\n'])
                     ft.writelines([
-                        f"////// aborted shelldo.run() before the following commands were run:\n",
-                        f"////// {cmds[i+1:]}"])
+                        f"\t////// aborted shelldo.run() before the following commands were run:\n",
+                        f"\t////// {cmds[i+1:]}"])
                     return False
             
         return True
